@@ -1,0 +1,9 @@
+/* Local brief composer. Does not send or retain information. */
+(()=>{'use strict';
+const status=document.getElementById('status');function brief(){const choices=[...document.querySelectorAll('.choice input:checked')].map(x=>x.value);return '拾火創意｜合作需求\n\n需要的協助：'+(choices.join('、')||'希望先討論合適的合作方向')+'\n\n品牌與目標：\n'+(document.getElementById('brief').value.trim()||'尚待討論')+'\n\n品牌／公司：'+document.getElementById('company').value.trim()+'\n聯絡人：'+document.getElementById('person').value.trim()+'\n聯絡方式：'+document.getElementById('reply').value.trim()+'\n預計時程：'+document.getElementById('timeline').value.trim();}
+document.getElementById('copy').addEventListener('click',async()=>{const text=brief();try{await navigator.clipboard.writeText(text);status.textContent='已複製，可貼到對話中。尚未送出。'}catch(e){const area=document.createElement('textarea');area.value=text;area.style.cssText='position:fixed;left:-9999px';document.body.appendChild(area);area.select();let ok=false;try{ok=document.execCommand('copy')}catch(e){}area.remove();status.textContent=ok?'已複製，可貼到對話中。尚未送出。':'瀏覽器不允許複製，請使用「下載需求」。'}});
+document.getElementById('download').addEventListener('click',()=>{const url=URL.createObjectURL(new Blob([brief()],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='PIKHUO-合作需求.txt';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);status.textContent='已下載需求文字，尚未送出。'});
+
+const requested=new URLSearchParams(location.search).get('service');if(requested){document.querySelectorAll('.choice input').forEach(input=>{if(input.value===requested)input.checked=true;});}
+
+})();

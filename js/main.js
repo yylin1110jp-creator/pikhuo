@@ -7,6 +7,16 @@ function setText(selector, value) {
 }
 
 function applyEditableContent() {
+  Object.entries(content.sectionHeadings || {}).forEach(([key, lines]) => {
+    const heading = document.querySelector(`#${key}-title`);
+    if (!heading) return;
+    heading.replaceChildren();
+    lines.forEach((line, index) => {
+      if (index) heading.append(document.createElement('br'));
+      heading.append(document.createTextNode(line));
+    });
+  });
+
   if (content.hero?.title) {
     document.querySelectorAll("#hero-title span").forEach((line, index) => {
       if (content.hero.title[index]) line.textContent = content.hero.title[index];
